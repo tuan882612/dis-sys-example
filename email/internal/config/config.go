@@ -9,21 +9,23 @@ import (
 )
 
 type Configuration struct {
-	*Server   `env:",prefix=SERVER_"`
-	*Database `env:",prefix=DB_"`
-	*Email    `env:",prefix=EMAIL_"`
+	*Server   `env:",prefix=SERVER_,required"`
+	*Database `env:",prefix=DB_,required"`
+	*Email    `env:",prefix=EMAIL_,required"`
 }
 
 func New() (*Configuration, error) {
+	log.Info().Msg("initializing configuration...")
+
 	if err := godotenv.Load(); err != nil {
-		log.Error().Str("service", "auth").Msg("failed to load .env file")
+		log.Error().Err(err).Msg("failed to load .env file")
 		return nil, err
 	}
 
 	cfg := &Configuration{}
 
 	if err := envconfig.Process(context.Background(), cfg); err != nil {
-		log.Error().Msg("failed to process configuration")
+		log.Error().Err(err).Msg("failed to process configuration")
 		return nil, err
 	}
 

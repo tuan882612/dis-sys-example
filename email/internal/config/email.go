@@ -1,7 +1,7 @@
 package config
 
 type Email struct {
-	SmtpHost string `envconfig:"SMTP_HOST,required"`
-	Sender   string `envconfig:"SENDER,required"`
-	Password string `envconfig:"PASSWORD,required"`
+	SmtpHost string `env:"SMTP_HOST,required"`
+	Sender   string `env:"SENDER,required"`
+	Password string `env:"PASSWORD,required"`
 }
