@@ -10,7 +10,7 @@ const (
 		<div class="email-container">
 			<div class="email-content">
 				<p>
-					This token is valid for <strong>3 minutes</strong>. 
+					This token is valid for <strong>5 minutes</strong>. 
 					Please use it to complete your authentication process.
 				</p>
 			</div>

@@ -16,7 +16,7 @@ func getKafka(addr, username, password string) (*kafka.Conn, error) {
 	// Create SASL/SCRAM mechanism
 	mechanism, err := scram.Mechanism(scram.SHA512, username, password)
 	if err != nil {
-		log.Error().Msgf("failed to create mechanism: %v", err)
+		log.Error().Err(err).Msg("failed to create mechanism")
 		return nil, err
 	}
 
@@ -30,7 +30,7 @@ func getKafka(addr, username, password string) (*kafka.Conn, error) {
 	// Create a new Kafka reader using the broker and dialer
 	conn, err := dialer.DialContext(context.Background(), "tcp", addr)
 	if err != nil {
-		log.Error().Msgf("failed to dial: %v", err)
+		log.Error().Err(err).Msg("failed to dial kafka")
 		return nil, err
 	}
 

@@ -15,12 +15,12 @@ import (
 
 type Server struct {
 	svr  *grpc.Server
-	addr string
 	deps *deps.Dependencies
+	addr string
 }
 
 func New(d *deps.Dependencies) *Server {
-	log.Info().Msg("creating server...")
+	log.Info().Msg("initializing server...")
 	return &Server{
 		svr:  grpc.NewServer(),
 		addr: d.Config.Server.Host + ":" + d.Config.Server.Port,
@@ -29,7 +29,7 @@ func New(d *deps.Dependencies) *Server {
 }
 
 func (s *Server) setup() {
-	log.Info().Msg("setting up server services...")
+	log.Info().Msg("registering server services...")
 
 	emailSvc := email.New(s.deps)
 	authpb.RegisterAuthServiceServer(s.svr, emailSvc)
@@ -46,12 +46,12 @@ func (s *Server) Start() error {
 		log.Error().Msgf("failed to listen: %v", err)
 		return err
 	}
-	log.Info().Msgf("server listening at %v...", lis.Addr())
-
+	
+	log.Info().Msgf("server listening at %v", lis.Addr())
 	if err := s.svr.Serve(lis); err != nil {
 		log.Error().Msgf("failed to serve: %v", err)
 		return err
 	}
-
+	
 	return nil
 }

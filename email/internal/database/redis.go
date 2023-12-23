@@ -18,7 +18,7 @@ func getRedis(redisUrl, redisPsw string) (*redis.Client, error) {
 	// check if redis is connected
 	_, err := conn.Ping().Result()
 	if err != nil {
-		log.Error().Str("location", "getRedis").Msgf("failed to connect to redis: %v", err)
+		log.Error().Err(err).Msg("failed to connect to redis")
 		return nil, err
 	}
 

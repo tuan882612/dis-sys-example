@@ -13,7 +13,7 @@ type Dependencies struct {
 }
 
 func New() (*Dependencies, error) {
-	log.Info().Msg("initializing dependencies")
+	log.Info().Msg("initializing dependencies...")
 
 	cfg, err := config.New()
 	if err != nil {
