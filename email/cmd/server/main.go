@@ -11,6 +11,8 @@ import (
 )
 
 func main() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	log.Logger = log.With().Str("service", "email").Logger()
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
 	dps, err := deps.New()
