@@ -43,15 +43,15 @@ func (s *Server) Start() error {
 
 	lis, err := net.Listen("tcp", s.addr)
 	if err != nil {
-		log.Error().Msgf("failed to listen: %v", err)
+		log.Error().Err(err).Msg("failed to listen")
 		return err
 	}
-	
+
 	log.Info().Msgf("server listening at %v", lis.Addr())
 	if err := s.svr.Serve(lis); err != nil {
-		log.Error().Msgf("failed to serve: %v", err)
+		log.Error().Err(err).Msg("failed to serve")
 		return err
 	}
-	
+
 	return nil
 }
