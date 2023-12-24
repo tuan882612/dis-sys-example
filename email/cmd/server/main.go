@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"dissys/internal/deps"
+	"dissys/internal/logging"
 	"dissys/internal/server"
 )
 
@@ -19,6 +20,9 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to initialize dependencies")
 	}
+
+	loggingSvc := logging.New(dps)
+	loggingSvc.Setup()
 
 	svr := server.New(dps)
 	if err := svr.Start(); err != nil {

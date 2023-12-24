@@ -27,7 +27,7 @@ func (r *repository) StoreTwoFAData(userID, status string, code int) error {
 		return err
 	}
 
-	// set the key and ttl 
+	// set the key and ttl
 	ttl := time.Duration(60*5) * time.Second // 5 minutes
 	key := "auth:" + userID
 

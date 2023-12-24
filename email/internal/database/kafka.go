@@ -10,29 +10,29 @@ import (
 	"github.com/segmentio/kafka-go/sasl/scram"
 )
 
-func getKafka(addr, username, password string) (*kafka.Conn, error) {
+func getKafka(addr, username, password string) (*kafka.Dialer, error) {
 	log.Info().Msg("connecting kafka...")
 
-	// Create SASL/SCRAM mechanism
+	// create SASL/SCRAM mechanism
 	mechanism, err := scram.Mechanism(scram.SHA512, username, password)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create mechanism")
 		return nil, err
 	}
 
-	// Create a dialer with SASL/SCRAM authentication
+	// create a dialer with SASL/SCRAM authentication
 	dialer := &kafka.Dialer{
 		Timeout:       10 * time.Second,
 		SASLMechanism: mechanism,
 		TLS:           &tls.Config{},
 	}
 
-	// Create a new Kafka reader using the broker and dialer
-	conn, err := dialer.DialContext(context.Background(), "tcp", addr)
+	// create a new Kafka reader using the broker and dialer
+	_, err = dialer.DialContext(context.Background(), "tcp", addr)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to dial kafka")
 		return nil, err
 	}
 
-	return conn, nil
+	return dialer, nil
 }

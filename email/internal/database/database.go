@@ -10,7 +10,7 @@ import (
 
 type Providers struct {
 	Redis *redis.Client
-	Kafka *kafka.Conn
+	Kafka *kafka.Dialer
 }
 
 func New(d *config.Database) (*Providers, error) {
@@ -21,13 +21,13 @@ func New(d *config.Database) (*Providers, error) {
 		return nil, err
 	}
 
-	conn, err := getKafka(d.KafkaADDR, d.KafkaUSR, d.KafkaPSW)
+	dialer, err := getKafka(d.KafkaADDR, d.KafkaUSR, d.KafkaPSW)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Providers{
 		Redis: client,
-		Kafka: conn,
+		Kafka: dialer,
 	}, nil
 }
