@@ -29,13 +29,15 @@ func NewMailPayload(t EmailType, userID string, data interface{}) *MailPayload {
 type TwoFAData struct {
 	Code    int
 	Retries int
+	Role    string
 	Status  string
 }
 
-func NewTwoFAData(code int, retries int, status string) *TwoFAData {
+func NewTwoFAData(code, retries int, role, status string) *TwoFAData {
 	return &TwoFAData{
 		Code:    code,
 		Retries: retries,
+		Role:    role,
 		Status:  status,
 	}
 }

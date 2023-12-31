@@ -2,16 +2,17 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-option go_package = "./pb/authpb";
+option go_package = "./pb/emailpb";
 
-package auth;
+package email;
 
-service AuthService {
+service EmailService {
     rpc SendTwoFACode (TwoFAPayload) returns (google.protobuf.Empty);
 }
 
 message TwoFAPayload {
     string user_id = 1;
     string email = 2;
-    string user_status = 3;
+    string role = 3;
+    string status = 4;
 }

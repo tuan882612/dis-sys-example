@@ -9,10 +9,10 @@ import (
 
 type Dependencies struct {
 	Config   *config.Configuration
-	Database *database.Providers
+	Database *database.DataStores
 }
 
-func New() (*Dependencies, error) {
+func NewDependencies() (*Dependencies, error) {
 	log.Info().Msg("initializing dependencies...")
 
 	cfg, err := config.New()
@@ -20,7 +20,7 @@ func New() (*Dependencies, error) {
 		return nil, err
 	}
 
-	db, err := database.New(cfg.Database)
+	db, err := database.NewDataStores(cfg.Database)
 	if err != nil {
 		return nil, err
 	}

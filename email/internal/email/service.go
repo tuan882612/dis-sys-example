@@ -8,24 +8,24 @@ import (
 
 	"dissys/internal/deps"
 	"dissys/internal/email/smtp"
-	"dissys/internal/proto/pb/authpb"
+	"dissys/internal/proto/pb/emailpb"
 )
 
 type Service struct {
-	authpb.UnimplementedAuthServiceServer
+	emailpb.UnimplementedEmailServiceServer
 	smtpSvc *smtp.Service
-	cache   *repository
+	cache   *cache
 }
 
-func New(d *deps.Dependencies) authpb.AuthServiceServer {
+func NewService(d *deps.Dependencies) emailpb.EmailServiceServer {
 	log.Info().Msg("initializing email service...")
 	return &Service{
 		smtpSvc: smtp.New(d.Config.Email),
-		cache:   NewRepository(d.Database.Redis),
+		cache:   NewCache(d.Database.Redis),
 	}
 }
 
-func (s *Service) SendTwoFACode(ctx context.Context, payload *authpb.TwoFAPayload) (*empty.Empty, error) {
+func (s *Service) SendTwoFACode(ctx context.Context, payload *emailpb.TwoFAPayload) (*empty.Empty, error) {
 	// generate a 2FA code
 	code, err := s.smtpSvc.Generate2FACode()
 	if err != nil {
@@ -35,7 +35,7 @@ func (s *Service) SendTwoFACode(ctx context.Context, payload *authpb.TwoFAPayloa
 
 	// store the 2FA data
 	go func() {
-		if err := s.cache.StoreTwoFAData(payload.GetUserId(), payload.GetUserStatus(), code); err != nil {
+		if err := s.cache.StoreTwoFAData(payload.GetUserId(), payload.GetRole(), payload.GetStatus(), code); err != nil {
 			return
 		}
 

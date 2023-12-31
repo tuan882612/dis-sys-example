@@ -8,25 +8,25 @@ import (
 	"dissys/internal/config"
 )
 
-type Providers struct {
+type DataStores struct {
 	Redis *redis.Client
 	Kafka *kafka.Dialer
 }
 
-func New(d *config.Database) (*Providers, error) {
-	log.Info().Msg("initializing database providers...")
+func NewDataStores(cfg *config.Database) (*DataStores, error) {
+	log.Info().Msg("initializing database datastores...")
 
-	client, err := getRedis(d.RedisURL, d.RedisPSW)
+	client, err := getRedis(cfg.RedisURL, cfg.RedisPSW)
 	if err != nil {
 		return nil, err
 	}
 
-	dialer, err := getKafka(d.KafkaADDR, d.KafkaUSR, d.KafkaPSW)
+	dialer, err := getKafka(cfg.KafkaADDR, cfg.KafkaUSR, cfg.KafkaPSW)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Providers{
+	return &DataStores{
 		Redis: client,
 		Kafka: dialer,
 	}, nil

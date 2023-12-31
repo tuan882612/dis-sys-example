@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"dissys/internal/deps"
-	"dissys/internal/logging"
+	"dissys/internal/observability/logging"
 	"dissys/internal/server"
 )
 
@@ -16,15 +16,19 @@ func main() {
 	log.Logger = log.With().Str("service", "email").Logger()
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
-	dps, err := deps.New()
+	dps, err := deps.NewDependencies()
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to initialize dependencies")
 	}
 
-	loggingSvc := logging.New(dps)
+	loggingSvc := logging.NewLogPublisher(dps.Config.Database, dps.Database.Kafka)
 	loggingSvc.Setup()
 
-	svr := server.New(dps)
+	svr, err := server.New(dps)
+	if err != nil {
+		os.Exit(1)
+	}
+
 	if err := svr.Start(); err != nil {
 		os.Exit(1)
 	}

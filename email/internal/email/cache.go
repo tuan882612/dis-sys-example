@@ -9,20 +9,20 @@ import (
 	"dissys/internal/email/smtp"
 )
 
-type repository struct {
+type cache struct {
 	cache *redis.Client
 }
 
-func NewRepository(cache *redis.Client) *repository {
-	log.Info().Msg("initializing repo (cache) repository...")
-	return &repository{
-		cache: cache,
+func NewCache(client *redis.Client) *cache {
+	log.Info().Msg("initializing cache...")
+	return &cache{
+		cache: client,
 	}
 }
 
-func (r *repository) StoreTwoFAData(userID, status string, code int) error {
+func (r *cache) StoreTwoFAData(userID, role, status string, code int) error {
 	// initialize and serialize the 2FA data
-	data, err := smtp.NewTwoFAData(code, 5, status).Serialize()
+	data, err := smtp.NewTwoFAData(code, 5, role, status).Serialize()
 	if err != nil {
 		return err
 	}
